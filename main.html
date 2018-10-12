@@ -1,0 +1,41 @@
+<head></head>
+
+<body>
+    <h1>ToDo App</h1>
+    <div>
+        <button id='btnClearList'>Clear List</button>
+    </div>
+    <div>
+        <button id='btnAddTodo'>Add ToDo</button>
+    </div>
+    <ul></ul>
+
+    <script>
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+
+        ipcRenderer.on('todo:add', (event, todo) => {
+            const li = document.createElement('li');
+            const text = document.createTextNode(todo);
+
+            li.appendChild(text);
+
+            document.querySelector('ul').appendChild(li);
+
+
+        });
+
+        ipcRenderer.on('todo:clear', () => {
+            document.querySelector('ul').innerHTML = '';
+        })
+
+        document.querySelector('#btnClearList').addEventListener('click', () => {
+            document.querySelector('ul').innerHTML = '';
+        });
+
+        document.querySelector('#btnAddToDo').addEventListener('click', () => {
+            ipcRenderer.send('todo:new');
+        });
+
+    </script>
+</body>
